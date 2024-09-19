@@ -159,6 +159,10 @@ public class CookingBuddyPlugin extends Plugin
 
 	public void checkPlayerCookingEligibility()
 	{
+
+		//fetch player cooking level
+		playerCookingLevel = client.getRealSkillLevel(Skill.COOKING);
+
 		//Check if the player is max cooking.
 		if(playerCookingLevel != 99)
 		{
