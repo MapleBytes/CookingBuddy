@@ -271,20 +271,16 @@ public class CookingBuddyPlugin extends Plugin
 	}
 
 
-	/*
 
-
-	todo: Add onWidgetOpen
-		If widget is bank, update global bankwidgetopened boolean to true.
-
-
-
-		todo: Update onwidgetclosed to set global bankwidgetopened boolean to false.
-	 */
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
 	{
 		if(widgetLoaded.getGroupId() != InterfaceID.BANK) return;
+
+		if(inCookingRegion)
+		{
+			checkPlayerCookingEligibility();
+		}
 
 		bankWidgetOpen = true;
 	}
@@ -295,7 +291,6 @@ public class CookingBuddyPlugin extends Plugin
 	{
 		if(widgetClosed.getGroupId() != InterfaceID.BANK) return;
 
-		//Update global
 		bankWidgetOpen = false;
 
 		updatePlayerRegion();
