@@ -268,6 +268,20 @@ public class CookingBuddyPlugin extends Plugin
 		valuesInitialized = true;
 	}
 
+
+	/*
+
+
+	todo: Add onWidgetOpen
+		If widget is bank, update global bankwidgetopened boolean to true.
+
+
+
+		todo: Update onwidgetclosed to set global bankwidgetopened boolean to false.
+	 */
+
+
+
 	@Subscribe
 	public void onWidgetClosed(WidgetClosed widgetClosed)
 	{
@@ -309,6 +323,17 @@ public class CookingBuddyPlugin extends Plugin
 
 		//If player is not max cooking, escape.
 		if(!playerMaxCooking) return;
+
+
+		/*
+		todo: Note: Everything past this point assumes we have the most up to date inventory information, we do not if
+			 the player clicks to cook while the bank is open, as we only check their inventory once the bank widget closes.
+			 _
+			 Add check, if bankwidget opened = true, check containers then we have the most up to date inventory information.
+			 This is more efficient then just greedily fetching inventory state on every click, this way we only fetch
+			 if the player has clicked "cook" while the bank is open, thus fixxing the known issue.
+		 */
+
 
 		//If player has cooking cape, they will not burn food, so escape.
 		if(hasCookingCape) return;
