@@ -31,7 +31,6 @@ import java.util.Objects;
 
 
 
-
 @Slf4j
 @PluginDescriptor(
 	/*
@@ -66,6 +65,9 @@ public class CookingBuddyPlugin extends Plugin
 	public boolean 	checkPlayerLevelFlag;
 	public boolean 	checkPlayerContainerFlag;
 	public boolean 	onGameTickNeededFlag;
+
+	//This is to fix the issue of a player clicking "cook" while their bank is already open.
+	public boolean  bankWidgetOpen;
 
 
 	//Notification in-game message string
@@ -279,13 +281,22 @@ public class CookingBuddyPlugin extends Plugin
 
 		todo: Update onwidgetclosed to set global bankwidgetopened boolean to false.
 	 */
+	@Subscribe
+	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
+	{
+		if(widgetLoaded.getGroupId() != InterfaceID.BANK) return;
 
+		bankWidgetOpen = true;
+	}
 
 
 	@Subscribe
 	public void onWidgetClosed(WidgetClosed widgetClosed)
 	{
 		if(widgetClosed.getGroupId() != InterfaceID.BANK) return;
+
+		//Update global
+		bankWidgetOpen = false;
 
 		updatePlayerRegion();
 		checkContainers();
@@ -324,6 +335,12 @@ public class CookingBuddyPlugin extends Plugin
 		//If player is not max cooking, escape.
 		if(!playerMaxCooking) return;
 
+
+		//This is to fix the issue of a player clicking "cook" while their bank is already open.
+		if(bankWidgetOpen)
+		{
+			checkContainers();
+		}
 
 		/*
 		todo: Note: Everything past this point assumes we have the most up to date inventory information, we do not if
